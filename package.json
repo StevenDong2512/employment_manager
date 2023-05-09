@@ -1,0 +1,17 @@
+{
+  "name": "employment_manager",
+  "version": "1.0.0",
+  "description": "This is a CMS using inquirer and SQL to manager employees information",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "inquirer": "^8.2.4",
+    "mysql2": "^3.3.0"
+  }
+}
