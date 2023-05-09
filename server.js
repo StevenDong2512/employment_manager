@@ -24,12 +24,13 @@ function start() {
         name: "begin",
         message: "Select a task to execute.",
         choices: [
-            "view all departments",
-            "view all roles",
+            "View all departments",
+            "View all roles",
             "View all employees",
             "Add a department",
             "Add a role",
             "Add an employee",
+            "Update an employee",
             "Quit",
         ]
     }).then((data) => {
@@ -37,7 +38,7 @@ function start() {
             case "View all departments":
                 viewAllDepartments();
                 break;
-            case "view all roles":
+            case "View all roles":
                 viewAllRoles();
                 break;
             case "View all employees":
@@ -51,6 +52,9 @@ function start() {
                 break;
             case "Add an employee":
                 addEmployee();
+                break;
+            case "Update an employee":
+                updateEmployee();
                 break;
             case "Quit":
                 connection.end();
@@ -91,7 +95,7 @@ function viewAllRoles() {
 //View all employees
 function viewAllEmployees() {
     const query = `SELECT employee.id, employee.first_name, employee.last_name, role_title, department.department, role.salary, manager.first_name
-    FROM emoloyee
+    FROM employee
     LEFT JOIN role ON employee.role_id = role.id
     LEFT JOIN department ON role.department_id = department.id
     LEFT JOIN manager ON employee.manager_id = manager.id`;
@@ -112,7 +116,7 @@ function addDepartment() {
         message: "Please enter the name for the new department."
     }).then((data) => {
         const query = `INSERT INTO department (department) 
-        VALUES ("${data.name}")`;
+        VALUES ("${data.department}")`;
         connection.query(query, (err, res) => {
             if (err) {
                 console.log(err.message)
@@ -147,10 +151,10 @@ function addRole() {
                 type: "list",
                 name: "department",
                 message: "Please select the department for the new role.",
-                choices: res.map(department => department.name)
+                choices: res.map(department => department.department)
             }
         ]).then((data) => {
-            const department = res.find(d => d.name === data.department);
+            const department = res.find(d => d.department === data.department);
             const query = `INSERT INTO role SET ?`;
             connection.query(query, {
                 title: data.title,
@@ -169,7 +173,6 @@ function addRole() {
 }
 
 // Add an employee
-
 function addEmployee() {
     connection.query(`SELECT id, title
     FROM role`, (err, res) => {
@@ -178,7 +181,7 @@ function addEmployee() {
         };
         const role = res.map(({ id, title }) => ({
             name: title,
-            value: id,
+            value: `${id}`,
         }));
         inquirer.prompt([
             {
@@ -228,6 +231,69 @@ function addEmployee() {
     });
 }
 
+//Update employee role
+function updateEmployee() {
+    const queryEmployee = `SELECT employee.id, employee.first_name, employee.last_name, role.title
+    FROM employee
+    LEFT JOIN role
+    ON employee.role_id = role.id`;
+    const queryRole = `SELECT * 
+    FROM role`;
+    let resE, resR;
+    connection.query(queryEmployee, (err, res) => {
+        if (err) {
+            console.error(err);
+            return;
+        }
+        resE = res;
+        promptUser();
+    });
+    connection.query(queryRole, (err, res) => {
+        if (err) {
+            console.error(err);
+            return;
+        }
+        resR = res;
+        promptUser();
+    });
+    function promptUser() {
+        if (resE && resR) {
+            inquirer.prompt([
+                {
+                    type: "list",
+                    name: "employee",
+                    message: "Select an employee by last name to update.",
+                    choices: resE.map((employee) => `${employee.last_name}`)
+                },
+                {
+                    type: "list",
+                    name: "role",
+                    message: "Select a new role for the employee.",
+                    choices: resR.map((role) => role.title),
+                },
+            ]).then((data) => {
+                const employee = resE.find(
+                    (employee) => `${employee.last_name}` === data.employee
+                );
+                const role = resR.find(
+                    (role) => role.title === data.role
+                );
+                const query =
+                    `UPDATE employee SET role_id = ? WHERE id = ?`;
+                connection.query(
+                    query,
+                    [role.id, employee.id],
+                    (err, res) => {
+                        if (err) throw err;
+                        console.log(
+                            `Updated ${employee.first_name} ${employee.last_name}'s role to ${role.title} in the database!`
+                        );
+                        start();
+                    });
+            });
+        }
+    }
+}
 
 //Quit program
 process.on("Quit", () => {
