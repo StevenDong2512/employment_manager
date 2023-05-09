@@ -22,9 +22,9 @@ The porpuse of this project is to manage employee's information, the function of
 
 ## Usage
 
-[Demo Video](# LogoGenerator
+[Demo Video](https://drive.google.com/file/d/12io9j45KTiO6-wNs7U6xMlwnjgT8HpST/view)
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 
 ## Description
 
