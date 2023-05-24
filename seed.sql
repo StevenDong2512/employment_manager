@@ -19,3 +19,14 @@ VALUES
 ('Legal Manager', 120000.00, 6),
 ('Creative Lead', 150000.00, 7),
 ('COO', 190000.00, 8);
+
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES
+('Steven', 'D', 1, 1),
+('Don', 'K', 2, 2),
+('Artem', 'G', 3, 3),
+('Faye', 'W', 4, 4),
+('Chunli', 'H', 5, 5),
+('Onyx', 'D', 6, 6),
+('Alex', 'B', 7, 7),
+('Kate', 'P', 8, 8),
