@@ -174,62 +174,70 @@ function addRole() {
 
 // Add an employee
 function addEmployee() {
-    connection.query(`SELECT id, title
-    FROM role`, (err, res) => {
-        if (err) {
-            console.log(err.message);
-        };
-        const role = res.map(({ id, title }) => ({
-            name: title,
-            value: `${id}`,
-        }));
-        inquirer.prompt([
-            {
-                type: "input",
-                name: "firstName",
-                message: "Please enter the first name for the new employee.",
-            },
-            {
-                type: "input",
-                name: "lastName",
-                message: "Please enter the last name for the new employee.",
-            },
-            {
-                type: "list",
-                name: "roleId",
-                message: "Please select a role for the new employee.",
-                choices: role,
-            },
-            {
-                type: "list",
-                name: "managerId",
-                message: "Please select a manager for the new employee.",
-                choices: [
-                    {
-                        name: "N/A",
-                        value: null,
-                    },
-                    ...managers,
-                ]
-            },
-        ]).then((data) => {
-            const query = `INSERT INTO employee (first_name, last_name, role_id, manager_id)
-            VALUES (?, ?, ?, ?)`;
-            const values = [
-                data.firstName,
-                data.lastName,
-                data.roleId,
-                data.managerId,
-            ];
-            connection.query(query, values, (err) => {
-                if (err) {
-                    console.error(err);
-                }
-                start();
-            });
+    connection.query("SELECT id, title FROM role", (err, res) => {
+      if (err) {
+        console.log(err.message);
+        return;
+      }
+  
+      const role = res.map(({ id, title }) => ({
+        name: title,
+        value: id.toString(),
+      }));
+  
+      // Define an empty array for managers if it's not defined
+      const managers = [];
+  
+      inquirer
+        .prompt([
+          {
+            type: "input",
+            name: "firstName",
+            message: "Please enter the first name for the new employee.",
+          },
+          {
+            type: "input",
+            name: "lastName",
+            message: "Please enter the last name for the new employee.",
+          },
+          {
+            type: "list",
+            name: "roleId",
+            message: "Please select a role for the new employee.",
+            choices: role,
+          },
+          {
+            type: "list",
+            name: "managerId",
+            message: "Please select a manager for the new employee.",
+            choices: [
+              {
+                name: "N/A",
+                value: null,
+              },
+              ...managers,
+            ],
+          },
+        ])
+        .then((data) => {
+          const query = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)`;
+          const values = [
+            data.firstName,
+            data.lastName,
+            data.roleId,
+            data.managerId,
+          ];
+          connection.query(query, values, (err) => {
+            if (err) {
+              console.error(err);
+              return;
+            }
+            start();
+          });
         });
     });
-}
+  }
+  
 
 //Update employee role
 function updateEmployee() {
