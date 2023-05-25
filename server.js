@@ -94,11 +94,11 @@ function viewAllRoles() {
 
 //View all employees
 function viewAllEmployees() {
-    const query = `SELECT employee.id, employee.first_name, employee.last_name, role_title, department.department, role.salary, manager.first_name
+    const query = `SELECT employee.id, employee.first_name, employee.last_name, role.title, department.department, role.salary, manager.first_name
     FROM employee
     LEFT JOIN role ON employee.role_id = role.id
     LEFT JOIN department ON role.department_id = department.id
-    LEFT JOIN manager ON employee.manager_id = manager.id`;
+    LEFT JOIN employee manager ON employee.manager_id = manager.id`;
     connection.query(query, (err, res) => {
         if (err) {
             console.log(err.message)
