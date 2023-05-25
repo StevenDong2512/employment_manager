@@ -41,7 +41,7 @@ The porpuse of this project is to generate a simple logo with up to three letter
 
 ## Usage
 
-[Demo Video](https://drive.google.com/file/d/12io9j45KTiO6-wNs7U6xMlwnjgT8HpST/view)
+[Demo Video]([https://drive.google.com/file/d/12io9j45KTiO6-wNs7U6xMlwnjgT8HpST/view](https://drive.google.com/file/d/18nNzJ2TsHRWkt-yxCQHbYOApJgBPrnLJ/view))
 
 ## Credits
 
